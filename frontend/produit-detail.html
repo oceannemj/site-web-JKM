@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Détail produit - Loedi Kids">
+  <title>Détail Produit - Loedi Kids | Layette Premium</title>
+  
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+   <link href="css/custom.css" rel="stylesheet">
+ 
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand gradient-text" href="index.html">
+        <i class="bi bi-stars"></i> Loedi Kids
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="catalogue.html">Catalogue</a></li>
+          <li class="nav-item"><a class="nav-link" href="panier.html">
+            <i class="bi bi-cart3"></i> Panier
+          </a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item nav-admin" style="display: none;">
+            <a class="nav-link" href="admin.html">Admin</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Product Detail Section -->
+  <section class="py-5 position-relative">
+    <!-- Decorative Elements -->
+    <div class="decor-circle" style="width: 15rem; height: 15rem; background: var(--pink-500); top: 5rem; right: -5rem;"></div>
+    <div class="decor-circle" style="width: 12rem; height: 12rem; background: var(--purple-500); bottom: 10rem; left: -3rem; animation-delay: -2s;"></div>
+
+    <div class="container position-relative" style="z-index: 2;">
+      <!-- Back Button -->
+      <div class="mb-4">
+        <a href="catalogue.html" class="back-btn">
+          <i class="bi bi-arrow-left"></i>
+          Retour au Catalogue
+        </a>
+      </div>
+
+      <div class="row g-4" id="produit-container" style="display: none;">
+        <!-- Product Image -->
+        <div class="col-12 col-lg-6">
+          <div class="product-image-container">
+            <img id="produit-image" src="" class="img-fluid w-100" alt="Produit">
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="col-12 col-lg-6">
+          <div class="product-details-card">
+            <div class="mb-3">
+              <span class="age-badge">
+                <i class="bi bi-calendar-heart"></i>
+                Âge: <span id="produit-age"></span>
+              </span>
+            </div>
+
+            <h1 id="produit-nom" class="display-5 fw-bold mb-3 gradient-text"></h1>
+
+            <p id="produit-description" class="lead text-secondary mb-4"></p>
+
+            <div class="d-flex align-items-center mb-4 pb-4 border-bottom">
+              <div class="me-4">
+                <div class="text-muted small mb-1">Prix</div>
+                <span id="produit-prix" class="fs-1 price-gradient"></span>
+              </div>
+              <div>
+                <div class="text-muted small mb-1">Stock</div>
+                <span id="produit-stock" class="badge bg-success fs-6 px-3 py-2"></span>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+<div class="d-grid gap-3 mb-3">
+  <button id="btn-panier" class="btn btn-gradient btn-lg rounded-pill d-flex align-items-center justify-content-center gap-2" onclick="handleAddToPanier()">
+    <i class="bi bi-cart-plus"></i>
+    Ajouter au Panier
+  </button>
+  <button id="btn-like" class="btn btn-outline-gradient btn-lg rounded-pill d-flex align-items-center justify-content-center gap-2" onclick="handleToggleLike()">
+    <i class="bi bi-heart"></i>
+    <span>Ajouter aux Favoris</span>
+  </button>
+</div>
+
+            <!-- Product Features -->
+            <div class="mt-4 p-3" style="background: linear-gradient(135deg, var(--pink-100) 0%, var(--purple-100) 100%); border-radius: 1rem;">
+              <h6 class="fw-bold mb-3"><i class="bi bi-shield-check"></i> Caractéristiques</h6>
+              <ul class="list-unstyled mb-0" id="produit-features">
+                <!-- Dynamically loaded -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loading-container" class="text-center py-5">
+        <div class="spinner-border text-pink" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Chargement du produit...</span>
+        </div>
+        <p class="mt-3 text-muted">Chargement du produit...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error-container" class="alert alert-warning text-center py-5" style="display: none;">
+        <i class="bi bi-exclamation-triangle fs-1 mb-3"></i>
+        <h4>Produit non trouvé</h4>
+        <p class="mb-3">Le produit demandé n'existe pas ou est temporairement indisponible.</p>
+        <a href="catalogue.html" class="btn btn-gradient">Retour au Catalogue</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews Section -->
+  <section class="py-5 position-relative" id="reviews-section" style="display: none;">
+    <!-- Decorative Elements -->
+    <div class="decor-circle" style="width: 10rem; height: 10rem; background: var(--blue-500); top: 2rem; right: 2rem;"></div>
+
+    <div class="container position-relative" style="z-index: 2;">
+      <div class="reviews-section">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h3 class="h2 fw-bold gradient-text mb-0">
+            <i class="bi bi-chat-heart"></i> Avis Clients
+          </h3>
+          <div class="stars">
+            <span id="average-rating">⭐⭐⭐⭐⭐</span> <span class="text-dark fw-bold" id="rating-average">(0/5)</span>
+          </div>
+        </div>
+
+        <!-- Reviews Container -->
+        <div id="avis-container" class="loading-spinner show">
+          <div class="spinner-border text-pink" role="status">
+            <span class="visually-hidden">Chargement des avis...</span>
+          </div>
+        </div>
+
+        <!-- Review Form -->
+        <div class="p-4 mt-4" style="background: linear-gradient(135deg, var(--blue-100) 0%, var(--purple-100) 100%); border-radius: 1.5rem;">
+          <h5 class="fw-bold mb-3">✨ Laissez votre avis</h5>
+          <form id="avis-form" style="display: none;">
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Votre commentaire</label>
+              <textarea id="avis-commentaire" class="form-control" rows="3" placeholder="Partagez votre expérience avec ce produit..."></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold d-block mb-2">Note</label>
+              <div class="d-flex flex-wrap gap-2">
+                <label class="rating-option">
+                  <input class="d-none" type="radio" name="note" value="5" id="note5">
+                  <span>⭐⭐⭐⭐⭐ Excellent</span>
+                </label>
+                <label class="rating-option">
+                  <input class="d-none" type="radio" name="note" value="4" id="note4">
+                  <span>⭐⭐⭐⭐ Très bon</span>
+                </label>
+                <label class="rating-option">
+                  <input class="d-none" type="radio" name="note" value="3" id="note3">
+                  <span>⭐⭐⭐ Bon</span>
+                </label>
+                <label class="rating-option">
+                  <input class="d-none" type="radio" name="note" value="2" id="note2">
+                  <span>⭐⭐ Moyen</span>
+                </label>
+                <label class="rating-option">
+                  <input class="d-none" type="radio" name="note" value="1" id="note1">
+                  <span>⭐ Mauvais</span>
+                </label>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-gradient px-5 py-2 rounded-pill" id="btn-submit-avis">
+              <i class="bi bi-send"></i> Publier mon avis
+            </button>
+          </form>
+          <div id="avis-auth-required" class="text-center py-4" style="display: none;">
+            <i class="bi bi-shield-lock fs-1 text-muted mb-3"></i>
+            <h5 class="text-muted mb-3">Connexion requise</h5>
+            <p class="text-muted mb-3">Connectez-vous pour laisser un avis et aider d'autres parents.</p>
+            <a href="login.html" class="btn btn-gradient">Se Connecter</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 text-center" style="background: linear-gradient(90deg, var(--pink-100) 0%, var(--purple-100) 100%);">
+    <div class="d-flex align-items-center justify-content-center gap-3 text-secondary flex-wrap px-3">
+      <span style="font-size: 2rem;">🍼</span>
+      <span class="fw-semibold">Loedi Kids - Votre boutique de layette à Douala</span>
+      <span style="font-size: 2rem;">👶</span>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+  import { checkAuth, addToPanier as addToPanierAPI, toggleLike as toggleLikeAPI, submitAvis } from './js/api.js';
+
+  const API_BASE = 'http://localhost:3000/api';
+  let currentProductId = null;
+
+  // Update navbar
+  async function updateNavbar() {
+    try {
+      const auth = await checkAuth();
+      const adminLink = document.querySelector('.nav-admin');
+      if (adminLink) adminLink.style.display = auth.isAdmin ? 'block' : 'none';
+    } catch (err) {
+      console.error('Erreur navbar:', err);
+    }
+  }
+
+  // Charger produit par ID
+  async function loadProduit(id) {
+    try {
+      console.log('🔍 Chargement produit ID:', id);
+      const response = await fetch(`${API_BASE}/produits/${id}`);
+      
+      if (!response.ok) {
+        console.error('❌ Produit non trouvé, statut:', response.status);
+        throw new Error('Produit non trouvé');
+      }
+      
+      const produit = await response.json();
+      console.log('✅ Produit chargé:', produit);
+
+      // Stocker l'ID du produit
+      currentProductId = id;
+
+      // Update DOM
+      document.getElementById('produit-image').src = produit.image_url || 'https://via.placeholder.com/800x600?text=Produit';
+      document.getElementById('produit-image').alt = produit.nom;
+      document.getElementById('produit-nom').textContent = produit.nom;
+      document.getElementById('produit-description').textContent = produit.description || 'Pas de description';
+      document.getElementById('produit-prix').textContent = `${produit.prix.toLocaleString()} FCFA`;
+      document.getElementById('produit-age').textContent = produit.age || 'Tous âges';
+      document.getElementById('produit-stock').textContent = produit.stock > 0 ? `${produit.stock} en stock` : 'Rupture';
+      document.getElementById('produit-stock').className = produit.stock > 0 ? 'badge bg-success fs-6 px-3 py-2' : 'badge bg-danger fs-6 px-3 py-2';
+
+      // Features
+      const features = [
+        `${produit.matiere || 'Coton Bio'} 100%`,
+        'Hypoallergénique',
+        `Entretien: ${produit.entretien || 'Lavage 30°C'}`,
+        'Certifié sans produits nocifs'
+      ];
+      document.getElementById('produit-features').innerHTML = features.map(f => 
+        `<li class="mb-2"><i class="bi bi-check2-circle text-success"></i> ${f}</li>`
+      ).join('');
+
+      // Show content
+      document.getElementById('produit-container').style.display = 'block';
+      document.getElementById('loading-container').style.display = 'none';
+      document.getElementById('reviews-section').style.display = 'block';
+
+      // Load avis
+      await loadAvis(id);
+    } catch (err) {
+      console.error('❌ Erreur chargement produit:', err);
+      document.getElementById('loading-container').style.display = 'none';
+      document.getElementById('error-container').style.display = 'block';
+    }
+  }
+
+  // Charger avis
+  async function loadAvis(id) {
+    try {
+      console.log('🔍 Chargement avis pour produit:', id);
+      const response = await fetch(`${API_BASE}/avis/produit/${id}`);
+      
+      if (!response.ok) {
+        console.warn('⚠️ Route avis inexistante ou erreur');
+        throw new Error('Avis indisponibles');
+      }
+
+      const data = await response.json();
+      const avis = Array.isArray(data) ? data : (data.avis || []);
+      console.log('✅ Avis chargés:', avis.length);
+
+      const container = document.getElementById('avis-container');
+      
+      if (avis.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-4">
+            <i class="bi bi-chat-square-text fs-1 text-muted mb-3"></i>
+            <h5 class="text-muted mb-2">Aucun avis pour le moment</h5>
+            <p class="text-muted">Soyez le premier à laisser un commentaire !</p>
+          </div>
+        `;
+      } else {
+        container.innerHTML = avis.map(avi => `
+          <div class="review-card">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <div>
+                <h6 class="fw-bold mb-1">${avi.user_nom || 'Anonyme'}</h6>
+                <div class="stars small">${'⭐'.repeat(avi.note || 5)}</div>
+              </div>
+              <small class="text-muted">${new Date(avi.created_at).toLocaleDateString('fr-FR')}</small>
+            </div>
+            <p class="mb-0 text-secondary">${avi.commentaire}</p>
+          </div>
+        `).join('');
+
+        // Average rating
+        const average = avis.reduce((sum, a) => sum + (a.note || 0), 0) / avis.length;
+        document.getElementById('average-rating').innerHTML = '⭐'.repeat(Math.round(average));
+        document.getElementById('rating-average').textContent = `(${average.toFixed(1)}/5)`;
+      }
+      
+      container.classList.remove('loading-spinner', 'show');
+    } catch (err) {
+      console.error('❌ Erreur chargement avis:', err);
+      const container = document.getElementById('avis-container');
+      container.innerHTML = `
+        <div class="text-center py-4">
+          <i class="bi bi-info-circle fs-1 text-muted mb-3"></i>
+          <p class="text-muted">Les avis ne sont pas encore disponibles</p>
+        </div>
+      `;
+      container.classList.remove('loading-spinner', 'show');
+    }
+  }
+
+  // Ajouter au panier
+  async function handleAddToPanier() {
+    if (!currentProductId) {
+      alert('❌ Erreur: Produit non chargé');
+      return;
+    }
+
+    try {
+      await addToPanierAPI(currentProductId, 1);
+      const btn = document.getElementById('btn-panier');
+      const originalHTML = btn.innerHTML;
+      
+      btn.innerHTML = '<i class="bi bi-check-circle"></i> Ajouté au panier !';
+      btn.classList.remove('btn-gradient');
+      btn.classList.add('btn-success');
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('btn-success');
+        btn.classList.add('btn-gradient');
+        btn.disabled = false;
+      }, 2000);
+    } catch (err) {
+      console.error('❌ Erreur ajout panier:', err);
+      if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+        alert('⚠️ Vous devez être connecté pour ajouter au panier.\n\nRedirection vers la page de connexion...');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+      } else {
+        alert('❌ Erreur ajout panier: ' + err.message);
+      }
+    }
+  }
+
+  // Toggle like
+  async function handleToggleLike() {
+    if (!currentProductId) {
+      alert('❌ Erreur: Produit non chargé');
+      return;
+    }
+
+    try {
+      await toggleLikeAPI(currentProductId);
+      const btn = document.getElementById('btn-like');
+      const icon = btn.querySelector('i');
+      const text = btn.querySelector('span');
+      
+      if (icon.classList.contains('bi-heart')) {
+        icon.classList.remove('bi-heart');
+        icon.classList.add('bi-heart-fill');
+        text.textContent = 'Retirer des Favoris';
+        btn.classList.remove('btn-outline-gradient');
+        btn.classList.add('btn-gradient');
+      } else {
+        icon.classList.remove('bi-heart-fill');
+        icon.classList.add('bi-heart');
+        text.textContent = 'Ajouter aux Favoris';
+        btn.classList.remove('btn-gradient');
+        btn.classList.add('btn-outline-gradient');
+      }
+    } catch (err) {
+      console.error('❌ Erreur like:', err);
+      if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+        alert('⚠️ Vous devez être connecté pour ajouter aux favoris');
+      } else {
+        alert('❌ Erreur: ' + err.message);
+      }
+    }
+  }
+
+  // Submit avis
+  async function handleSubmitAvis() {
+    const commentaire = document.getElementById('avis-commentaire').value.trim();
+    const noteInput = document.querySelector('input[name="note"]:checked');
+    
+    if (!commentaire || !noteInput) {
+      alert('⚠️ Veuillez remplir tous les champs');
+      return;
+    }
+
+    if (!currentProductId) {
+      alert('❌ Erreur: Produit non chargé');
+      return;
+    }
+
+    try {
+      await submitAvis(currentProductId, commentaire, parseInt(noteInput.value));
+      alert('✅ Merci pour votre avis !');
+      document.getElementById('avis-form').reset();
+      document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+      await loadAvis(currentProductId);
+    } catch (err) {
+      console.error('❌ Erreur soumission avis:', err);
+      alert('❌ Erreur: ' + err.message);
+    }
+  }
+
+  // Show/hide avis form
+  async function toggleAvisForm() {
+    try {
+      const auth = await checkAuth();
+      if (auth.isAuth) {
+        document.getElementById('avis-form').style.display = 'block';
+        document.getElementById('avis-auth-required').style.display = 'none';
+      } else {
+        document.getElementById('avis-form').style.display = 'none';
+        document.getElementById('avis-auth-required').style.display = 'block';
+      }
+    } catch (err) {
+      console.error('Erreur toggleAvisForm:', err);
+      document.getElementById('avis-form').style.display = 'none';
+      document.getElementById('avis-auth-required').style.display = 'block';
+    }
+  }
+
+  // Rating selection
+  document.querySelectorAll('.rating-option input').forEach(input => {
+    input.addEventListener('change', function() {
+      document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+      this.closest('.rating-option').classList.add('active');
+    });
+  });
+
+  // Event listeners
+  document.getElementById('btn-submit-avis')?.addEventListener('click', handleSubmitAvis);
+
+  // Init
+  document.addEventListener('DOMContentLoaded', async () => {
+    await updateNavbar();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    
+    if (!productId) {
+      console.error('❌ Aucun ID de produit dans l\'URL');
+      document.getElementById('loading-container').style.display = 'none';
+      document.getElementById('error-container').style.display = 'block';
+      return;
+    }
+    
+    await loadProduit(productId);
+    await toggleAvisForm();
+  });
+
+  // Expose functions globally
+  window.handleAddToPanier = handleAddToPanier;
+  window.handleToggleLike = handleToggleLike;
+</script>
+</body>
+</html>

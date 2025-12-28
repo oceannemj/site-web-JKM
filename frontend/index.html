@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loedi Kids - Boutique de Layette Premium</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #e3f2fd 100%);
+            min-height: 100vh;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #ec407a, #ab47bc, #42a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: #333 !important;
+            transition: all 0.3s;
+            margin: 0 10px;
+        }
+
+        .nav-link:hover {
+            color: #ec407a !important;
+            transform: translateY(-2px);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, #ec407a, #ab47bc);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(236, 64, 122, 0.3);
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(236, 64, 122, 0.4);
+        }
+
+        /* Hero Section */
+        .hero-section {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(5px);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .badge-collection {
+            display: inline-block;
+            background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+            padding: 10px 25px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-collection span {
+            background: linear-gradient(135deg, #ec407a, #ab47bc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 600;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #ec407a, #ab47bc, #42a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+
+        .btn-primary-gradient {
+            background: linear-gradient(135deg, #ec407a, #ab47bc);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(236, 64, 122, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary-gradient:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(236, 64, 122, 0.4);
+        }
+
+        .btn-outline-custom {
+            background: white;
+            color: #333;
+            border: 2px solid #fce4ec;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-outline-custom:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Decorative circles */
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.2;
+            filter: blur(40px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .circle-1 {
+            width: 200px;
+            height: 200px;
+            background: #fce4ec;
+            top: 10%;
+            left: 5%;
+        }
+
+        .circle-2 {
+            width: 250px;
+            height: 250px;
+            background: #f3e5f5;
+            bottom: 10%;
+            right: 5%;
+            animation-delay: 2s;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: #e3f2fd;
+            top: 40%;
+            right: 10%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Features */
+        .features-section {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-card.pink {
+            background: linear-gradient(135deg, #fce4ec, #ffffff);
+            border-color: #fce4ec;
+        }
+
+        .feature-card.purple {
+            background: linear-gradient(135deg, #f3e5f5, #ffffff);
+            border-color: #f3e5f5;
+        }
+
+        .feature-card.blue {
+            background: linear-gradient(135deg, #e3f2fd, #ffffff);
+            border-color: #e3f2fd;
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .feature-desc {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        /* Products Section */
+        .products-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f3e5f5 0%, #fce4ec 50%, #e3f2fd 100%);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ec407a, #ab47bc, #42a5f5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle {
+            color: #666;
+            font-size: 1.2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.3s;
+            border: 1px solid #fce4ec;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .product-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+
+        .heart-icon {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .heart-icon:hover {
+            transform: scale(1.1);
+            background: white;
+        }
+
+        .age-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #f3e5f5, #fce4ec);
+            padding: 8px 20px;
+            border-radius: 25px;
+            color: #ab47bc;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-body {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .product-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ec407a, #ab47bc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-voir-plus {
+            background: linear-gradient(135deg, #ec407a, #ab47bc);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-voir-plus:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(236, 64, 122, 0.3);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, #fce4ec, #f3e5f5, #e3f2fd);
+            border-radius: 30px;
+            padding: 60px 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 2px solid #fce4ec;
+        }
+
+        .cta-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #fce4ec, #f3e5f5);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            color: #666;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .footer-icon {
+            font-size: 2rem;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ec407a;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" onclick="navigateTo('home')">
+                <img src="images/logo.jpg" alt="Loedi Kids Logo" class="logo-img">
+                <span>Loedi Kids</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigateTo('home')">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigateTo('catalogue')">Catalogue</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigateTo('about')">À Propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="navigateTo('contact')">Contact</a>
+                    </li>
+                    <li class="nav-item ms-3">
+                        <button class="btn btn-login" onclick="handleAuthClick()">
+                            <i class="fas fa-user"></i> <span id="authButtonText">Connexion</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
+        
+        <div class="container hero-content">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <div class="badge-collection">
+                        <span>✨ Collection 2025</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Douceur et Style pour Vos <span class="gradient-text">Petits Anges</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Découvrez notre sélection de layettes premium, conçues avec amour pour le confort et le bonheur de votre bébé
+                    </p>
+                    <div class="d-flex gap-3 justify-content-center flex-wrap">
+                        <button class="btn btn-primary-gradient" onclick="navigateTo('catalogue')">
+                            <i class="fas fa-shopping-bag"></i>
+                            Explorer le Catalogue
+                            <span>→</span>
+                        </button>
+                        <button class="btn btn-outline-custom" onclick="navigateTo('contact')">
+                            Nous Contacter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card pink">
+                        <div class="feature-icon">🌸</div>
+                        <h3 class="feature-title">Douceur Premium</h3>
+                        <p class="feature-desc">Tissus ultra-doux et hypoallergéniques</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card purple">
+                        <div class="feature-icon">✨</div>
+                        <h3 class="feature-title">Qualité Garantie</h3>
+                        <p class="feature-desc">Produits testés et certifiés</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card blue">
+                        <div class="feature-icon">💝</div>
+                        <h3 class="feature-title">Livraison Rapide</h3>
+                        <p class="feature-desc">À Douala et environs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Nos Coups de Cœur</h2>
+                <p class="section-subtitle">
+                    <span>✨</span> Une sélection spéciale pour vos petits trésors <span>✨</span>
+                </p>
+            </div>
+
+            <div id="productsContainer" class="row g-4">
+                <!-- Loading spinner -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p class="mt-3">Chargement des produits...</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <button class="btn btn-primary-gradient" onclick="navigateTo('catalogue')">
+                    Voir Toute la Collection
+                    <i class="fas fa-star"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-card">
+                <div class="cta-icon">👶💝</div>
+                <h3 class="cta-title">Offrez le Meilleur à Votre Bébé</h3>
+                <p class="cta-text">
+                    Chaque produit est sélectionné avec soin pour garantir douceur, confort et sécurité. Parce que votre bébé mérite ce qu'il y a de mieux.
+                </p>
+                <button class="btn btn-outline-custom" onclick="navigateTo('about')">
+                    Découvrir Notre Histoire
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <span class="footer-icon">🍼</span>
+                <span>Loedi Kids - Votre boutique de layette à Douala</span>
+                <span class="footer-icon">👶</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Configuration API
+        const API_BASE = 'http://localhost:3000/api';
+
+        // Navigation
+        function navigateTo(page) {
+            const pages = {
+                'home': 'index.html',
+                'catalogue': 'catalogue.html',
+                'about': 'about.html',
+                'contact': 'contact.html',
+                'login': 'login.html',
+                'register': 'register.html',
+                'admin': 'admin.html'
+            };
+
+            if (pages[page]) {
+                window.location.href = pages[page];
+            } else {
+                console.warn('Page non trouvée:', page);
+            }
+        }
+
+        // Vérification de l'authentification
+        async function checkAuth() {
+            const token = localStorage.getItem('jwtToken');
+            
+            if (!token) {
+                return { isAuth: false, isAdmin: false };
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/auth/me`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                if (!response.ok) {
+                    localStorage.removeItem('jwtToken');
+                    return { isAuth: false, isAdmin: false };
+                }
+                
+                const user = await response.json();
+                return { 
+                    isAuth: true, 
+                    isAdmin: user.role === 'admin', 
+                    user 
+                };
+            } catch (err) {
+                console.error('Erreur checkAuth:', err);
+                
+                // Décoder le JWT localement en cas d'erreur réseau
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    
+                    if (payload.exp && payload.exp * 1000 < Date.now()) {
+                        localStorage.removeItem('jwtToken');
+                        return { isAuth: false, isAdmin: false };
+                    }
+                    
+                    return {
+                        isAuth: true,
+                        isAdmin: payload.role === 'admin',
+                        user: {
+                            id: payload.userId || payload.id,
+                            email: payload.email,
+                            role: payload.role,
+                            nom: payload.nom,
+                            prenom: payload.prenom
+                        }
+                    };
+                } catch (decodeErr) {
+                    localStorage.removeItem('jwtToken');
+                    return { isAuth: false, isAdmin: false };
+                }
+            }
+        }
+
+        // Gérer le clic sur le bouton d'authentification
+        async function handleAuthClick() {
+            const auth = await checkAuth();
+            
+            if (auth.isAuth) {
+                if (auth.isAdmin) {
+                    navigateTo('admin');
+                } else {
+                    // Déconnexion
+                    if (confirm('Voulez-vous vous déconnecter ?')) {
+                        localStorage.removeItem('jwtToken');
+                        location.reload();
+                    }
+                }
+            } else {
+                navigateTo('login');
+            }
+        }
+
+        // Charger les produits depuis l'API
+        async function loadProduits() {
+            const container = document.getElementById('productsContainer');
+            
+            try {
+                const response = await fetch(`${API_BASE}/produits?limit=3`);
+                
+                if (!response.ok) {
+                    throw new Error('Erreur lors du chargement des produits');
+                }
+                
+                const produits = await response.json();
+                
+                if (produits.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center">
+                            <p class="text-muted">Aucun produit disponible pour le moment.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = produits.map(produit => `
+                    <div class="col-md-6 col-lg-4">
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${produit.image_url || 'https://via.placeholder.com/400x300?text=Produit'}" 
+                                     alt="${produit.nom}"
+                                     onerror="this.src='https://via.placeholder.com/400x300?text=Image+non+disponible'">
+                                <div class="heart-icon" onclick="toggleLike('${produit.id}')">
+                                    <i class="far fa-heart text-danger"></i>
+                                </div>
+                                <div class="age-badge">${produit.age || 'Tous âges'}</div>
+                            </div>
+                            <div class="product-body">
+                                <h3 class="product-title">${produit.nom}</h3>
+                                <p class="product-description">${produit.description || 'Description non disponible'}</p>
+                                <div class="product-footer">
+                                    <span class="product-price">${parseInt(produit.prix).toLocaleString()} FCFA</span>
+                                    <button class="btn btn-voir-plus" onclick="viewProduct('${produit.id}')">
+                                        Voir plus
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-warning text-center">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            Impossible de charger les produits. Veuillez réessayer plus tard.
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Voir un produit
+        function viewProduct(productId) {
+            window.location.href = `product.html?id=${productId}`;
+        }
+
+        // Toggle like
+        async function toggleLike(productId) {
+            const auth = await checkAuth();
+            
+            if (!auth.isAuth) {
+                alert('Veuillez vous connecter pour aimer un produit');
+                navigateTo('login');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/avis/likes`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
+                    },
+                    body: JSON.stringify({ produit_id: productId })
+                });
+
+                if (response.ok) {
+                    // Mettre à jour l'icône du cœur
+                    const heartIcon = event.target.closest('.heart-icon').querySelector('i');
+                    heartIcon.classList.toggle('far');
+                    heartIcon.classList.toggle('fas');
+                }
+            } catch (error) {
+                console.error('Erreur toggle like:', error);
+            }
+        }
+
+        // Mettre à jour le bouton d'authentification
+        async function updateAuthButton() {
+            const auth = await checkAuth();
+            const authButton = document.getElementById('authButtonText');
+            
+            if (auth.isAuth) {
+                if (auth.isAdmin) {
+                    authButton.textContent = 'admin';
+                } else {
+                    authButton.textContent = auth.user.prenom || auth.user.email;
+                }
+            } else {
+                authButton.textContent = 'Connexion';
+            }
+        }
+
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthButton();
+            loadProduits();
+        });
+    </script>
+</body>
+</html>

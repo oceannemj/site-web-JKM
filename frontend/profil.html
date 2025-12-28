@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gérez votre profil, vos commandes et vos favoris sur Loedi Kids">
+  <title>Mon Profil - Loedi Kids | Layette Premium</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/logo.jpg">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Toast Container -->
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;"></div>
+
+  <!-- Decorative Elements -->
+  <div class="decor-circle decor-pink"></div>
+  <div class="decor-circle decor-purple"></div>
+  <div class="decor-circle decor-blue"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container">
+      <a class="navbar-brand gradient-text" href="index.html">
+        <img src="images/logo.jpg" alt="Loedi Kids" style="height: 100px; width: auto; border-radius: 50%; margin-right: 8px;">
+        Loedi Kids
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="catalogue.html">Catalogue</a></li>
+          <li class="nav-item">
+            <a class="nav-link position-relative" href="panier.html">
+              <i class="bi bi-cart3"></i> Panier
+              <span class="cart-badge" style="display: none;">0</span>
+            </a>
+          </li>
+          <li class="nav-item"><a class="nav-link active" href="profil.html">
+            <i class="bi bi-person-circle"></i> Profil
+          </a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item nav-admin" style="display: none;">
+            <a class="nav-link" href="admin.html">
+              <i class="bi bi-shield-check"></i> Admin
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Profile Content -->
+  <section class="py-5 position-relative">
+    <div class="container">
+      <!-- Back Button -->
+      <div class="mb-4">
+        <a href="index.html" class="back-btn">
+          <i class="bi bi-arrow-left"></i>
+          Retour à l'accueil
+        </a>
+      </div>
+
+      <!-- Page Title -->
+      <div class="text-center mb-5 fade-in">
+        <h1 class="display-3 fw-bold gradient-text mb-2">
+          <i class="bi bi-person-heart"></i> Mon Profil
+        </h1>
+        <p class="lead text-secondary">
+          Gérez votre compte et suivez vos commandes
+        </p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Profile Sidebar -->
+        <div class="col-12 col-lg-4">
+          <!-- Profile Info Card -->
+          <div class="profile-card mb-4 fade-in">
+            <div class="profile-avatar">
+              👤
+            </div>
+            <div class="profile-info">
+              <h3 class="fw-bold mb-2" id="profil-nom">
+                <div class="spinner-border spinner-border-sm text-pink" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </h3>
+              <p class="text-muted mb-3" id="profil-email">Chargement...</p>
+              <span class="badge" style="background: linear-gradient(90deg, var(--pink-500) 0%, var(--purple-500) 100%); color: white; padding: 0.5rem 1rem; border-radius: 999px;" id="profil-role">
+                <div class="spinner-border spinner-border-sm" role="status">
+                  <span class="visually-hidden">Chargement...</span>
+                </div>
+              </span>
+            </div>
+          </div>
+
+          <!-- Stats Cards -->
+          <div class="row g-3 mb-4">
+            <div class="col-6">
+              <div class="stats-card fade-in fade-in-delay-1">
+                <div class="stats-number" id="total-commandes">0</div>
+                <div class="small text-secondary fw-semibold">
+                  <i class="bi bi-bag-check"></i> Commandes
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="stats-card fade-in fade-in-delay-2">
+                <div class="stats-number" id="total-avis">0</div>
+                <div class="small text-secondary fw-semibold">
+                  <i class="bi bi-star-fill"></i> Avis
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="section-card fade-in fade-in-delay-3">
+            <h5 class="fw-bold mb-3">
+              <i class="bi bi-gear"></i> Actions Rapides
+            </h5>
+            <div class="d-grid gap-2">
+              <button class="btn btn-gradient rounded-pill" onclick="editProfile()">
+                <i class="bi bi-pencil"></i> Modifier Profil
+              </button>
+              <button class="btn btn-outline-danger rounded-pill" onclick="logout()">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-12 col-lg-8">
+          <!-- Tab Navigation -->
+          <div class="tab-nav fade-in">
+            <button class="tab-btn active" onclick="switchTab('commandes')">
+              <i class="bi bi-bag-check"></i> Mes Commandes
+            </button>
+            <button class="tab-btn" onclick="switchTab('avis')">
+              <i class="bi bi-chat-heart"></i> Mes Avis
+            </button>
+            <button class="tab-btn" onclick="switchTab('favoris')">
+              <i class="bi bi-heart-fill"></i> Favoris
+            </button>
+          </div>
+
+          <!-- Commandes Tab -->
+          <div id="tab-commandes" class="tab-content">
+            <div class="section-card">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <h3 class="h4 fw-bold mb-0">
+                  <i class="bi bi-clock-history"></i> Historique des Commandes
+                </h3>
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="badge bg-secondary" id="commandes-count">0 commandes</span>
+                  <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="loadCommandes()">
+                    <i class="bi bi-arrow-clockwise"></i> Actualiser
+                  </button>
+                </div>
+              </div>
+
+              <div id="historique-commandes">
+                <div class="text-center py-5">
+                  <div class="spinner-border text-pink mb-3" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                  <p class="text-muted">Chargement de vos commandes...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Avis Tab -->
+          <div id="tab-avis" class="tab-content" style="display: none;">
+            <div class="section-card">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <h3 class="h4 fw-bold mb-0">
+                  <i class="bi bi-star-fill"></i> Mes Avis
+                </h3>
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="badge bg-secondary" id="avis-count">0 avis</span>
+                  <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="loadAvis()">
+                    <i class="bi bi-arrow-clockwise"></i> Actualiser
+                  </button>
+                </div>
+              </div>
+
+              <div id="mes-avis">
+                <div class="text-center py-5">
+                  <div class="spinner-border text-pink mb-3" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                  <p class="text-muted">Chargement de vos avis...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Favoris Tab -->
+          <div id="tab-favoris" class="tab-content" style="display: none;">
+            <div class="section-card">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                <h3 class="h4 fw-bold mb-0">
+                  <i class="bi bi-heart-fill text-danger"></i> Mes Favoris
+                </h3>
+                <div class="d-flex gap-2 align-items-center">
+                  <span class="badge bg-secondary" id="favoris-count">0 articles</span>
+                  <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="loadFavoris()">
+                    <i class="bi bi-arrow-clockwise"></i> Actualiser
+                  </button>
+                </div>
+              </div>
+
+              <div id="mes-favoris">
+                <div class="text-center py-5">
+                  <div class="spinner-border text-pink mb-3" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                  </div>
+                  <p class="text-muted">Chargement de vos favoris...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 text-center mt-5" style="background: linear-gradient(135deg, var(--pink-100) 0%, var(--purple-100) 100%);">
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-center gap-3 text-secondary flex-wrap px-3 mb-4">
+        <span style="font-size: 2rem;">🍼</span>
+        <span class="fw-semibold">Loedi Kids - Votre boutique de layette à Douala</span>
+        <span style="font-size: 2rem;">👶</span>
+      </div>
+      <div class="d-flex justify-content-center gap-3 mb-3">
+        <a href="index.html" class="text-decoration-none text-secondary">Accueil</a>
+        <span class="text-muted">•</span>
+        <a href="catalogue.html" class="text-decoration-none text-secondary">Catalogue</a>
+        <span class="text-muted">•</span>
+        <a href="contact.html" class="text-decoration-none text-secondary">Contact</a>
+      </div>
+      <p class="text-muted small mb-0">
+        &copy; 2024 Loedi Kids. Tous droits réservés.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ✅ CORRECTION : Retirer type="module" -->
+  <script src="js/profil.js"></script>
+</body>
+</html>

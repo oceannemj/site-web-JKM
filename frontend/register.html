@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Créez votre compte Loedi Kids pour profiter d'une expérience d'achat personnalisée">
+  <title>Inscription - Loedi Kids | Layette Premium</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/logo.jpg">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body class="py-4">
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <!-- Decorative Elements -->
+  <div class="decor-circle decor-pink"></div>
+  <div class="decor-circle decor-purple"></div>
+  <div class="decor-circle decor-blue"></div>
+
+  <!-- Icône Home/Profil -->
+  <a id="auth-icon" href="index.html" class="login-icon" title="Accueil">
+    <i class="bi bi-house fs-4"></i>
+  </a>
+
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="card card-gradient p-4 p-md-5 shadow-xl">
+          <!-- Logo -->
+          <div class="text-center mb-4">
+            <img src="images/logo.jpg" alt="Loedi Kids" class="logo-img mb-3" style="max-width: 120px;">
+            <h1 class="display-4 fw-bold gradient-text mb-2">
+              <i class="bi bi-person-plus-fill"></i> Inscription
+            </h1>
+            <p class="text-muted">
+              Créez votre compte pour profiter d'une expérience personnalisée
+            </p>
+          </div>
+
+          <!-- Formulaire d'inscription -->
+          <form id="register-form">
+            <div class="row g-3">
+              <!-- Prénom -->
+              <div class="col-md-6">
+                <label for="reg-prenom" class="form-label fw-bold">
+                  <i class="bi bi-person"></i> Prénom <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="reg-prenom" 
+                  class="form-control input-focus" 
+                  placeholder="Ex: Marie" 
+                  required
+                  autocomplete="given-name">
+              </div>
+
+              <!-- Nom -->
+              <div class="col-md-6">
+                <label for="reg-nom" class="form-label fw-bold">
+                  <i class="bi bi-person-badge"></i> Nom <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="text" 
+                  id="reg-nom" 
+                  class="form-control input-focus" 
+                  placeholder="Ex: Dupont" 
+                  required
+                  autocomplete="family-name">
+              </div>
+
+              <!-- Email -->
+              <div class="col-12">
+                <label for="reg-email" class="form-label fw-bold">
+                  <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
+                </label>
+                <input 
+                  type="email" 
+                  id="reg-email" 
+                  class="form-control input-focus" 
+                  placeholder="Ex: marie.dupont@exemple.com" 
+                  required
+                  autocomplete="email">
+              </div>
+
+              <!-- Mot de passe -->
+              <div class="col-12">
+                <label for="reg-password" class="form-label fw-bold">
+                  <i class="bi bi-lock"></i> Mot de passe <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input 
+                    type="password" 
+                    id="reg-password" 
+                    class="form-control input-focus" 
+                    placeholder="Au moins 8 caractères" 
+                    minlength="8" 
+                    required
+                    autocomplete="new-password">
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button" 
+                    data-toggle-password="reg-password"
+                    title="Afficher/Masquer">
+                    <i class="bi bi-eye" id="toggle-icon-1"></i>
+                  </button>
+                </div>
+                <div class="mt-2">
+                  <div class="password-strength strength-weak" id="password-strength"></div>
+                  <span id="strength-text" class="small text-muted"></span>
+                </div>
+                
+              </div>
+
+              <!-- Confirmation mot de passe -->
+              <div class="col-12">
+                <label for="reg-confirm-password" class="form-label fw-bold">
+                  <i class="bi bi-lock-fill"></i> Confirmer le mot de passe <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input 
+                    type="password" 
+                    id="reg-confirm-password" 
+                    class="form-control input-focus" 
+                    placeholder="Répétez le mot de passe" 
+                    required
+                    autocomplete="new-password">
+                  <button 
+                    class="btn btn-outline-secondary" 
+                    type="button" 
+                    data-toggle-password="reg-confirm-password"
+                    title="Afficher/Masquer">
+                    <i class="bi bi-eye" id="toggle-icon-2"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Conditions -->
+              <div class="col-12">
+                <div class="form-check">
+                  <input 
+                    class="form-check-input" 
+                    type="checkbox" 
+                    id="terms" 
+                    required>
+                  <label class="form-check-label small" for="terms">
+                    J'accepte les 
+                    <a href="#" onclick="showTermsModal(); return false;" class="text-decoration-none">
+                      conditions d'utilisation
+                    </a>
+                    et la 
+                    <a href="#" onclick="showTermsModal(); return false;" class="text-decoration-none">
+                      politique de confidentialité
+                    </a>
+                    <span class="text-danger">*</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Bouton d'inscription -->
+              <div class="col-12">
+                <button type="submit" class="btn btn-gradient w-100 py-3 fw-bold" id="register-btn">
+                  <i class="bi bi-person-plus"></i> S'inscrire
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Messages d'erreur/succès -->
+          <div id="register-error" class="alert alert-danger mt-3" style="display: none;"></div>
+          <div id="register-success" class="alert success-alert mt-3" style="display: none;"></div>
+
+          <!-- Liens supplémentaires -->
+          <div class="text-center mt-4">
+            <hr class="my-4">
+            <p class="small text-muted mb-2">
+              Vous avez déjà un compte ?
+            </p>
+            <a href="login.html" class="btn btn-outline-primary rounded-pill px-4">
+              <i class="bi bi-box-arrow-in-right"></i> Se connecter
+            </a>
+          </div>
+
+          <!-- Avantages -->
+          <div class="row g-3 mt-4">
+            <div class="col-12">
+              <div class="alert alert-info border-0" style="background: linear-gradient(135deg, var(--blue-100) 0%, var(--purple-100) 100%);">
+                <h6 class="fw-bold mb-2">
+                  <i class="bi bi-gift"></i> Avantages de créer un compte
+                </h6>
+                <ul class="small mb-0">
+                  <li>Suivi de vos commandes en temps réel</li>
+                  <li>Historique d'achats et factures</li>
+                  <li>Liste de favoris personnalisée</li>
+                  <li>Offres et promotions exclusives</li>
+                  <li>Paiement rapide et sécurisé</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Conditions d'Utilisation -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title gradient-text fw-bold" id="termsModalLabel">
+            <i class="bi bi-file-earmark-text"></i> Conditions d'Utilisation
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body">
+          <h6 class="fw-bold">1. Acceptation des Conditions</h6>
+          <p class="small text-muted">
+            En vous inscrivant sur Loedi Kids, vous acceptez nos conditions générales de vente et notre politique de confidentialité. 
+            Vos données personnelles sont protégées et utilisées uniquement pour améliorer votre expérience d'achat.
+          </p>
+
+          <h6 class="fw-bold mt-3">2. Protection des Données</h6>
+          <p class="small text-muted">
+            Vos informations personnelles sont sécurisées et ne seront jamais partagées avec des tiers sans votre consentement. 
+            Nous utilisons des protocoles de sécurité avancés pour protéger vos données.
+          </p>
+
+          <h6 class="fw-bold mt-3">3. Vos Avantages</h6>
+          <ul class="small text-muted">
+            <li>✓ Accès sécurisé à votre compte personnel</li>
+            <li>✓ Livraison rapide à Douala et environs</li>
+            <li>✓ Satisfait ou remboursé sous 7 jours</li>
+            <li>✓ Service client réactif et à l'écoute</li>
+            <li>✓ Paiement sécurisé avec plusieurs options</li>
+          </ul>
+
+          <h6 class="fw-bold mt-3">4. Utilisation du Compte</h6>
+          <p class="small text-muted">
+            Vous vous engagez à fournir des informations exactes et à maintenir la confidentialité de votre mot de passe. 
+            Toute activité suspecte doit être signalée immédiatement à notre service client.
+          </p>
+
+          <div class="alert alert-success mt-3">
+            <i class="bi bi-shield-check"></i>
+            <strong>Garantie:</strong> Nous nous engageons à respecter votre vie privée et à protéger vos données personnelles conformément au RGPD.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Fermer
+          </button>
+          <button type="button" class="btn btn-gradient" onclick="acceptTerms()">
+            <i class="bi bi-check-lg"></i> J'accepte
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="text-center mt-5 py-3">
+    <p class="small text-muted mb-0">
+      &copy; 2024 Loedi Kids. Tous droits réservés.
+    </p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="js/register.js"></script>
+</body>
+</html>

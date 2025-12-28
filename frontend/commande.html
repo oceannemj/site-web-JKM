@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commande - Loedi Kids</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+  
+</head>
+<body class="py-4">
+  <!-- Navbar dynamique -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold gradient-text" href="index.html">Loedi Kids</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="index.html">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="catalogue.html">Catalogue</a></li>
+          <li class="nav-item"><a class="nav-link active" href="panier.html">Panier</a></li>
+          <li class="nav-item"><a class="nav-link" href="profil.html">Profil</a></li>
+          <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+          <li class="nav-item nav-admin" style="display: none;"><a class="nav-link" href="admin.html">Admin</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <!-- Loading State -->
+    <div id="checkout-loading" class="text-center py-5 checkout-loading show">
+      <div class="spinner-border text-pink" role="status" style="width: 3rem; height: 3rem;">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+      <p class="text-muted mt-3">Préparation de votre commande...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="checkout-error" class="alert alert-warning text-center py-5" style="display: none;">
+      <i class="bi bi-exclamation-triangle fs-1 mb-3 text-warning"></i>
+      <h4>Erreur chargement commande</h4>
+      <p class="mb-3">Impossible de charger votre panier. Vérifiez votre connexion.</p>
+      <button onclick="initCheckout()" class="btn btn-gradient">Réessayer</button>
+    </div>
+
+    <!-- Main Content -->
+    <div id="checkout-content" style="display: none;">
+      <h1 class="display-4 fw-bold gradient-text mb-4">💳 Finaliser Commande</h1>
+
+      <form id="commande-form">
+        <div class="row">
+          <!-- Infos Livraison -->
+          <div class="col-md-6">
+            <div class="form-section">
+              <h3 class="fw-bold mb-3">
+                <i class="bi bi-geo-alt"></i> Infos Livraison
+              </h3>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Nom Complet *</label>
+                <input type="text" id="nom-client" class="form-control" placeholder="Ex: Marie Dupont" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Email *</label>
+                <input type="email" id="email-client" class="form-control" placeholder="Ex: marie@exemple.com" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Téléphone *</label>
+                <input type="tel" id="tel-client" class="form-control" placeholder="Ex: +237 6XX XXX XXX" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Adresse de Livraison *</label>
+                <textarea class="form-control" id="adresse-client" rows="3" placeholder="Ex: NdongBong, Douala" required></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Récap Panier -->
+          <div class="col-md-6">
+            <div class="form-section">
+              <h3 class="fw-bold mb-3">
+                <i class="bi bi-receipt"></i> Récapitulatif Panier
+              </h3>
+              <div id="recap-panier" >
+                <div class="spinner-border text-pink" role="status">
+                  <span class="visually-hidden">Chargement panier...</span>
+                </div>
+              </div>
+              <div class="mt-4 p-3" style="background: linear-gradient(135deg, var(--blue-100) 0%, var(--purple-100) 100%); border-radius: 1rem;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="fw-bold">Sous-total</span>
+                  <span id="subtotal-recap" class="fw-bold"></span>
+                </div> 
+                <div class="d-flex justify-content-between align-items-center fw-bold border-top pt-2">
+                  <span class="h5 mb-0">Total</span>
+                  <span class="h4 price-gradient mb-0" id="total-commande"></span>
+                </div>
+              </div> 
+            </div>
+
+            <!-- Méthodes de Paiement -->
+            <div class="form-section">
+              <h3 class="fw-bold mb-3">
+                <i class="bi bi-credit-card"></i> Méthode de Paiement
+              </h3>
+              <div class="payment-methods">
+                <div class="payment-option active" data-method="mobile-money">
+                  <div class="payment-icon">💳</div>
+                  <div class="fw-semibold">Mobile Money</div>
+                  <small class="text-muted">Orange Money </small>
+                </div>
+                <div class="payment-option" data-method="cash-on-delivery">
+                  <div class="payment-icon">💰</div>
+                  <div class="fw-semibold">Paiement à la livraison</div>
+                  <small class="text-muted">+2000 FCFA</small>
+                </div>
+              </div>
+              <div id="payment-details" class="mt-3 p-3" style="background: var(--pink-100); border-radius: 1rem; display: none;">
+                <small id="payment-info"></small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <button type="submit" class="btn btn-gradient px-6 py-4 rounded-pill fs-5 d-flex align-items-center justify-content-center gap-2 mx-auto" id="submit-commande" style="display: none;">
+            <i class="bi bi-lock-fill"></i>
+            Confirmer 
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <div class="text-center w-100">
+              <i class="bi bi-check-circle-fill display-1 text-success mb-3"></i>
+              <h5 class="gradient-text">Commande Confirmée !</h5>
+            </div>
+          </div>
+          <div class="modal-body text-center">
+            <p class="lead mb-4">Votre commande #<span id="order-number"></span> a été enregistrée avec succès.</p>
+            <p class="text-muted mb-4">Un email de confirmation vous a été envoyé. Livraison prévue sous 24-48h à Douala.</p>
+            <div class="d-grid gap-2">
+              <button onclick="goToProfil()" class="btn btn-gradient rounded-pill">Voir Mes Commandes</button>
+              <a href="catalogue.html" class="btn btn-outline-gradient rounded-pill">Continuer Shopping</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal fade" id="errorModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header border-0">
+            <div class="text-center w-100">
+              <i class="bi bi-exclamation-triangle display-1 text-warning mb-3"></i>
+              <h5 class="text-danger">Erreur Commande</h5>
+            </div>
+          </div>
+          <div class="modal-body text-center">
+            <p id="error-message" class="mb-4"></p>
+            <button onclick="retryCheckout()" class="btn btn-gradient rounded-pill">Réessayer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    import { checkAuth } from './js/api.js';
+
+    const API_BASE = 'http://localhost:3000/api';
+
+    let currentUser = null;
+    let cartItems = [];
+
+    // Update navbar
+    async function updateNavbar() {
+      const auth = await checkAuth();
+      const adminLink = document.querySelector('.nav-admin');
+      if (adminLink) adminLink.style.display = auth.isAdmin ? 'block' : 'none';
+      if (!auth.isAuth) {
+        alert('Vous devez être connecté pour passer commande.');
+        window.location.href = 'login.html';
+      } else {
+        currentUser = auth.user;
+      }
+    }
+
+    // Load cart depuis l'API (panier lié à l'utilisateur connecté)
+    async function loadCart() {
+      try {
+        const response = await fetch(`${API_BASE}/paniers`, {
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
+        });
+        if (!response.ok) throw new Error('Erreur chargement panier');
+        cartItems = await response.json();
+        renderRecapPanier();
+        updateTotals();
+        document.getElementById('checkout-content').style.display = 'block';
+        document.getElementById('checkout-loading').classList.remove('show');
+      } catch (err) {
+        document.getElementById('checkout-loading').classList.remove('show');
+        document.getElementById('checkout-error').style.display = 'block';
+        console.error('Erreur load cart:', err);
+      }
+    }
+
+    // Render recap panier
+    function renderRecapPanier() {
+      const container = document.getElementById('recap-panier');
+      if (cartItems.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-4">
+            <i class="bi bi-cart-x fs-1 text-muted mb-3"></i>
+            <h5 class="text-muted">Panier vide</h5>
+            <p class="text-muted">Ajoutez des produits pour commander.</p>
+            <a href="catalogue.html" class="btn btn-gradient">Ajouter des produits</a>
+          </div>
+        `;
+        return;
+      }
+      container.innerHTML = cartItems.map(item => `
+        <div class="recap-item">
+          <div class="d-flex align-items-center gap-3">
+            <img src="${item.image || 'https://via.placeholder.com/60x60'}" alt="${item.nom}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 0.75rem;">
+            <div class="flex-grow-1">
+              <h6 class="fw-bold mb-1">${item.nom}</h6>
+              <p class="text-muted small mb-1">${item.age}</p>
+              <small class="text-success">x ${item.quantite}</small>
+            </div>
+            <div class="text-end">
+              <div class="price-gradient fw-bold">${(item.prix * item.quantite).toLocaleString()} FCFA</div>
+              <small class="text-muted">${item.prix.toLocaleString()} FCFA/unité</small>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update totals
+    function updateTotals() {
+      const total = cartItems.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+      document.getElementById('subtotal-recap').textContent = `${total.toLocaleString()} FCFA`;
+      document.getElementById('total-commande').textContent = `${total.toLocaleString()} FCFA`;
+      document.getElementById('submit-commande').style.display = total > 0 ? 'block' : 'none';
+      return total;
+    }
+
+    // Prefill form with user data
+    function prefillForm() {
+      if (currentUser) {
+        document.getElementById('nom-client').value = currentUser.nom || '';
+        document.getElementById('email-client').value = currentUser.email || '';
+        // Tel and address from clients table if available
+      }
+    }
+
+    // Payment method selection
+    document.querySelectorAll('.payment-option').forEach(option => {
+      option.addEventListener('click', function() {
+        document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        const method = this.dataset.method;
+        const details = document.getElementById('payment-details');
+        switch (method) {
+          case 'mobile-money':
+            details.innerHTML = '<small>Numéros: Orange Money 6XX XXX XXX </small>';
+            break;
+          case 'cash-on-delivery':
+            details.innerHTML = '<small>+2000 FCFA de frais de livraison. Paiement au livreur.</small>';
+            break;
+        }
+        details.style.display = 'block';
+      });
+    });
+
+    // Submit form
+    document.getElementById('commande-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const btn = document.getElementById('submit-commande');
+      const errorDiv = document.getElementById('checkout-error');
+
+      // Validation
+      const nom = document.getElementById('nom-client').value.trim();
+      const email = document.getElementById('email-client').value.trim();
+      const tel = document.getElementById('tel-client').value.trim();
+      const adresse = document.getElementById('adresse-client').value.trim();
+      const activePayment = document.querySelector('.payment-option.active').dataset.method;
+
+      if (!nom || !email || !tel || !adresse || cartItems.length === 0) {
+        alert('⚠️ Veuillez remplir tous les champs et ajouter des produits au panier.');
+        return;
+      }
+
+      // Loading
+      form.classList.add('checkout-loading');
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Traitement...';
+
+      try {
+        // Pour la version en ligne, on utilise l'email de l'utilisateur comme identifiant client
+        const clientId = currentUser?.email || email;
+
+        // Créer la commande avec les articles du panier
+        const total = cartItems.reduce((sum, item) => sum + (item.prix * item.quantite), 0);
+        // Utiliser l'ID du produit (produit_id) pour créer la commande côté backend
+        const orderItems = cartItems.map(item => ({ produit_id: item.produit_id || item.id, quantite: item.quantite }));
+
+        const response = await fetch(`${API_BASE}/commandes`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` },
+          body: JSON.stringify({ client_id: clientId, orderitems: orderItems, payment_method: activePayment })
+        });
+
+        if (!response.ok) throw new Error('Erreur création commande');
+
+        const orderData = await response.json();
+
+        // Vider le panier serveur
+        await fetch(`${API_BASE}/paniers/clear`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` } });
+
+        // Préparer le message WhatsApp pour l'admin
+        const WHATSAPP_PHONE = '237656795391'; // TODO: remplacer par le numéro WhatsApp de la boutique
+        const lignesTexte = cartItems.map(item => `- ${item.nom} x${item.quantite} = ${(item.prix * item.quantite).toLocaleString()} FCFA`).join('\n');
+        const message = `Nouvelle commande Loedi Kids #%${orderData.id.substring(0,8)}\n\n` +
+          `Client : ${nom}\n` +
+          `Téléphone : ${tel}\n` +
+          `Email : ${email}\n` +
+          `Adresse : ${adresse}\n\n` +
+          `Articles :\n${lignesTexte}\n\n` +
+          `Total : ${total.toLocaleString()} FCFA\n` +
+          `Paiement : ${activePayment}\n` +
+          `Statut initial : en_attente`;
+
+        const waUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
+        window.open(waUrl, '_blank');
+
+        // Success modal
+        document.getElementById('order-number').textContent = orderData.id;
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+      } catch (err) {
+        const modal = new bootstrap.Modal(document.getElementById('errorModal'));
+        document.getElementById('error-message').textContent = err.message;
+        modal.show();
+      } finally {
+        form.classList.remove('checkout-loading');
+        btn.innerHTML = '<i class="bi bi-lock-fill"></i> Confirmer & Payer Sécurisé';
+      }
+    });
+
+    // Init functions
+    function goToProfil() {
+      window.location.href = 'profil.html';
+    }
+
+    function retryCheckout() {
+      document.getElementById('checkout-error').style.display = 'none';
+      initCheckout();
+    }
+
+    async function initCheckout() {
+      await updateNavbar();
+      await loadCart();
+      prefillForm();
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', initCheckout);
+  </script>
+</body>
+</html>

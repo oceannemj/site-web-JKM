@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À Propos - Loedi Kids</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Custom CSS pour gradients et styles Tailwind-like -->
+  <link href="css/custom.css" rel="stylesheet">
+
+</head>
+<script>
+// Navbar dynamique (ex. lien admin si isAdmin)
+async function updateNavbar() {
+  const auth = await checkAuth();
+  const adminLink = document.querySelector('.nav-admin');
+  if (adminLink) adminLink.style.display = auth.isAdmin ? 'block' : 'none';
+}
+updateNavbar();
+</script>
+<body class="py-4">
+  <div class="container-fluid px-4">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-8">
+        <!-- Header Section -->
+        <div class="text-center mb-5">
+          
+          <h1 class="display-3 fw-bold gradient-text mb-3">À Propos de Loedi Kids</h1>
+        </div>
+
+        <!-- Main Content Card -->
+        <div class="card card-gradient shadow-lg p-5 border border-pink mb-5">
+          <!-- Mission -->
+          <div class="d-flex align-items-start gap-3 mb-4">
+            <div class="icon-circle">
+              <i class="bi bi-heart-fill text-pink" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+              <h3 class="h4 fw-bold text-dark mb-2">Notre Mission</h3>
+              <p class="lead text-muted">
+                Loedi Kids est votre boutique dédiée à la mode pour les tout-petits à Douala. Nous proposons une large gamme de vêtements et accessoires de qualité, tous styles, pour des bébés de 0 à 12 mois.
+              </p>
+            </div>
+          </div>
+
+          <!-- Boutique -->
+          <div class="d-flex align-items-start gap-3 mb-4">
+            <div class="icon-circle" style="background: linear-gradient(to bottom right, #dbeafe, #bfdbfe);">
+              <i class="bi bi-geo-alt-fill text-blue" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+              <h3 class="h4 fw-bold text-dark mb-2">Notre Boutique</h3>
+              <p class="lead text-muted">
+                Situés à NdongBong, nous sélectionnons des produits doux, confortables et tendance, importés et locaux, pour accompagner les jeunes parents avec style et tendresse.
+              </p>
+            </div>
+          </div>
+
+          <!-- Engagement -->
+          <div class="d-flex align-items-start gap-3 mb-4">
+            <div class="icon-circle" style="background: linear-gradient(to bottom right, #e9d5ff, #ddd6fe);">
+              <i class="bi bi-star-fill text-purple" style="font-size: 1.5rem;"></i>
+            </div>
+            <div>
+              <h3 class="h4 fw-bold text-dark mb-2">Notre Engagement</h3>
+              <p class="lead text-muted">
+                Rendre chaque moment avec votre bébé inoubliable, grâce à des vêtements qui allient douceur et élégance. Chaque produit est sélectionné avec soin pour garantir le confort et la sécurité de votre petit ange.
+              </p>
+            </div>
+          </div>
+
+          <!-- Values Section -->
+          <div class="values-section rounded-3 p-4 mt-4 border border-pink">
+            <h3 class="h3 fw-bold text-dark mb-3 text-center">Nos Valeurs ✨</h3>
+            <div class="row g-3 mt-3">
+              <div class="col-12 col-md-4 text-center">
+                <div class="values-card p-3">
+                  <div class="values-icon">🌟</div>
+                  <h4 class="fw-bold values-title-pink mb-1">Qualité</h4>
+                  <p class="text-muted small">Premium & certifiée</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 text-center">
+                <div class="values-card p-3">
+                  <div class="values-icon">💝</div>
+                  <h4 class="fw-bold values-title-purple mb-1">Tendresse</h4>
+                  <p class="text-muted small">Douceur garantie</p>
+                </div>
+              </div>
+              <div class="col-12 col-md-4 text-center">
+                <div class="values-card p-3">
+                  <div class="values-icon">🎨</div>
+                  <h4 class="fw-bold values-title-blue mb-1">Style</h4>
+                  <p class="text-muted small">Collections tendance</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decorative Elements -->
+        <div class="text-center mt-4">
+          <div class="d-inline-flex align-items-center gap-2 text-muted small">
+            <span>🍼</span>
+            <span>Fait avec amour pour vos tout-petits</span>
+            <span>👶</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

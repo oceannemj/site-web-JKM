@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Dashboard administrateur Loedi Kids - Gestion des produits, commandes et clients">
+  <title>Dashboard Admin - Loedi Kids</title>
+  
+  <!-- Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="css/custom.css" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Toast Container -->
+  <div class="toast-container position-fixed top-0 end-0 p-3" role="alert" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Loading Screen -->
+  <div id="loading" class="loading-screen" role="status" aria-live="polite">
+    <div class="loading-spinner mb-4"></div>
+    <h4 class="fw-bold gradient-text">Chargement...</h4>
+  </div>
+
+  <!-- Admin Content -->
+  <div id="admin-content" style="display: none;">
+    
+    <!-- Header Navigation -->
+    <header>
+      <nav class="navbar navbar-expand-lg sticky-top" style="background: var(--bg-primary); border-bottom: 1px solid var(--border-color);">
+        <div class="container-fluid px-4">
+          <!-- Brand -->
+          <a class="navbar-brand gradient-text fw-bold" href="index.html">
+            <img src="images/logo.jpg" alt="Loedi Kids Logo" style="height: 100px; width: auto; margin-right: 8px;">
+            <span>Loedi Kids Admin</span>
+          </a>
+
+          <!-- Navbar Actions -->
+          <div class="d-flex align-items-center gap-3">
+            <!-- Global Search -->
+            <div class="input-group" style="width: 300px;">
+              <label for="global-search" class="visually-hidden">Recherche globale</label>
+              <span class="input-group-text"><i class="bi bi-search"></i></span>
+              <input type="search" class="form-control" placeholder="Recherche globale..." id="global-search" aria-label="Recherche globale">
+            </div>
+           
+            <!-- Notifications -->
+            <div class="position-relative">
+              <button class="btn btn-link" onclick="toggleNotifications()" aria-label="Notifications" aria-expanded="false">
+                <i class="bi bi-bell fs-5" aria-hidden="true"></i>
+                <span class="notification-badge" id="notif-count">0</span>
+              </button>
+              
+              <!-- Notifications Dropdown -->
+              <div class="dropdown-menu dropdown-menu-end p-3" id="notifications-dropdown" style="width: 350px; max-height: 400px; overflow-y: auto; display: none;" role="menu">
+                <h6 class="mb-3">Notifications</h6>
+                <div id="notifications-list"></div>
+                <hr>
+                <button class="btn btn-sm btn-outline-primary w-100" onclick="markAllAsRead()">Marquer tout comme lu</button>
+              </div>
+            </div>
+           
+            <!-- Keyboard Shortcuts -->
+            <button class="btn btn-link" onclick="showShortcuts()" aria-label="Raccourcis clavier" title="Raccourcis clavier">
+              <i class="bi bi-keyboard" aria-hidden="true"></i>
+            </button>
+           
+            <!-- Profile Dropdown -->
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Menu profil">
+                <i class="bi bi-person-circle fs-5" aria-hidden="true"></i>
+                <span id="admin-name">Admin</span>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="profil.html"><i class="bi bi-person" aria-hidden="true"></i> Profil</a></li>
+                <li><a class="dropdown-item" href="#" onclick="showHistory()"><i class="bi bi-clock-history" aria-hidden="true"></i> Historique</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item text-danger" href="#" onclick="logout()"><i class="bi bi-box-arrow-right" aria-hidden="true"></i> Déconnexion</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Main Dashboard Section -->
+    <main class="py-4">
+      <div class="container-fluid px-4">
+        
+        <!-- Dashboard Header -->
+        <div class="row mb-4 align-items-center">
+          <div class="col-md-6">
+            <h1 class="h3 fw-bold mb-0">
+              <i class="bi bi-speedometer2" aria-hidden="true"></i> Dashboard
+            </h1>
+          </div>
+          
+          <!-- Period Filter -->
+          <div class="col-md-6 text-end">
+            <div class="btn-group" role="group" aria-label="Filtres de période">
+              <input type="radio" class="btn-check" name="period" id="today" value="today" autocomplete="off">
+              <label class="btn btn-outline-primary" for="today">Aujourd'hui</label>
+           
+              <input type="radio" class="btn-check" name="period" id="week" value="week" checked autocomplete="off">
+              <label class="btn btn-outline-primary" for="week">Semaine</label>
+           
+              <input type="radio" class="btn-check" name="period" id="month" value="month" autocomplete="off">
+              <label class="btn btn-outline-primary" for="month">Mois</label>
+            </div>
+          </div>
+        </div>
+     
+        <!-- Statistics Cards -->
+        <section aria-label="Statistiques">
+          <div class="row g-3 mb-4">
+            <!-- Products Stats -->
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="stats-icon" style="background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);">
+                    <i class="bi bi-box-seam" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="stats-number" id="stats-produits" aria-live="polite">0</div>
+                <div class="text-secondary">Produits</div>
+              </article>
+            </div>
+           
+            <!-- Orders Stats -->
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="stats-icon" style="background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);">
+                    <i class="bi bi-cart3" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="stats-number" id="stats-commandes" aria-live="polite">0</div>
+                <div class="text-secondary">Commandes</div>
+              </article>
+            </div>
+           
+            <!-- Clients Stats -->
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="stats-icon" style="background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);">
+                    <i class="bi bi-people" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="stats-number" id="stats-clients" aria-live="polite">0</div>
+                <div class="text-secondary">Clients</div>
+              </article>
+            </div>
+           
+            <!-- Revenue Stats -->
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="stats-icon" style="background: linear-gradient(135deg, #10b981 0%, #34d399 100%);">
+                    <i class="bi bi-currency-dollar" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="stats-number" id="stats-revenue" aria-live="polite">0</div>
+                <div class="text-secondary small">FCFA D'entrées</div>
+              </article>
+            </div>
+
+            <!-- Profit Stats -->
+            <div class="col-12 col-sm-6 col-xl-3">
+              <article class="stats-card">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                  <div class="stats-icon" style="background: linear-gradient(135deg, #b98310 0%, #d39334 100%);">
+                    <i class="bi bi-graph-up-arrow" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="stats-number" id="stats-profit" aria-live="polite">0</div>
+                <div class="text-secondary small">FCFA De Bénéfice</div>
+              </article>
+            </div>
+          </div>
+        </section>
+     
+        <!-- Main Navigation Tabs -->
+        <nav aria-label="Navigation principale du dashboard">
+          <ul class="nav nav-pills mb-4" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="tab-produits-btn" data-bs-toggle="pill" data-bs-target="#tab-produits" type="button" role="tab" aria-controls="tab-produits" aria-selected="true">
+                <i class="bi bi-box-seam" aria-hidden="true"></i> Produits
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-commandes-btn" data-bs-toggle="pill" data-bs-target="#tab-commandes" type="button" role="tab" aria-controls="tab-commandes" aria-selected="false">
+                <i class="bi bi-receipt" aria-hidden="true"></i> Commandes
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-clients-btn" data-bs-toggle="pill" data-bs-target="#tab-clients" type="button" role="tab" aria-controls="tab-clients" aria-selected="false">
+                <i class="bi bi-people" aria-hidden="true"></i> Clients
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-inventory-btn" data-bs-toggle="pill" data-bs-target="#tab-inventory" type="button" role="tab" aria-controls="tab-inventory" aria-selected="false">
+                <i class="bi bi-boxes" aria-hidden="true"></i> Inventaire
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-analytics-btn" data-bs-toggle="pill" data-bs-target="#tab-analytics" type="button" role="tab" aria-controls="tab-analytics" aria-selected="false">
+                <i class="bi bi-graph-up" aria-hidden="true"></i> Analytics
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="tab-settings-btn" data-bs-toggle="pill" data-bs-target="#tab-settings" type="button" role="tab" aria-controls="tab-settings" aria-selected="false">
+                <i class="bi bi-gear" aria-hidden="true"></i> Paramètres
+              </button>
+            </li>
+          </ul>
+        </nav>
+     
+        <!-- Tab Content -->
+        <div class="tab-content">
+          
+          <!-- Products Tab -->
+          <section class="tab-pane fade show active" id="tab-produits" role="tabpanel" aria-labelledby="tab-produits-btn">
+            <div class="section-card p-4 rounded-3">
+              <!-- Header -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 fw-bold mb-0">Gestion des Produits</h2>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm" onclick="exportData('excel')" aria-label="Exporter en Excel">
+                    <i class="bi bi-file-excel" aria-hidden="true"></i> Excel
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" onclick="exportData('pdf')" aria-label="Exporter en PDF">
+                    <i class="bi bi-file-pdf" aria-hidden="true"></i> PDF
+                  </button>
+                  <button class="btn btn-gradient btn-sm" onclick="showProductModal()" aria-label="Ajouter un nouveau produit">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Nouveau
+                    <span class="shortcut-badge ms-2">Ctrl+N</span>
+                  </button>
+                </div>
+              </div>
+             
+              <!-- Filters -->
+              <form class="row g-3 mb-4" onsubmit="event.preventDefault();" aria-label="Filtres des produits">
+                <div class="col-md-4">
+                  <label for="search-produits" class="visually-hidden">Rechercher un produit</label>
+                  <input type="search" class="form-control" placeholder="🔍 Rechercher..." id="search-produits" onkeyup="filterProducts()" aria-label="Rechercher un produit">
+                </div>
+                <div class="col-md-2">
+                  <label for="filter-type" class="visually-hidden">Filtrer par type</label>
+                  <select class="form-select" id="filter-type" onchange="filterProducts()" aria-label="Filtrer par type de produit">
+                    <option value="">Tous les types</option>
+                    <option value="Body">Body</option>
+                    <option value="Pyjama">Pyjama</option>
+                    <option value="Accessoire">Accessoire</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label for="filter-stock" class="visually-hidden">Filtrer par stock</label>
+                  <select class="form-select" id="filter-stock" onchange="filterProducts()" aria-label="Filtrer par niveau de stock">
+                    <option value="">Stock</option>
+                    <option value="high">Élevé (&gt;10)</option>
+                    <option value="low">Faible (&lt;10)</option>
+                    <option value="out">Rupture</option>
+                  </select>
+                </div>
+                <div class="col-md-4 text-end">
+                  <div class="btn-group" role="group" aria-label="Mode d'affichage">
+                    <button type="button" class="btn btn-outline-secondary btn-sm active" onclick="setView('grid')" aria-label="Affichage en grille" aria-pressed="true">
+                      <i class="bi bi-grid" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setView('list')" aria-label="Affichage en liste" aria-pressed="false">
+                      <i class="bi bi-list-ul" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+             
+              <!-- Loading Skeleton -->
+              <div id="products-skeleton" style="display: none;" aria-hidden="true">
+                <div class="row g-3">
+                  <div class="col-md-3"><div class="skeleton" style="height: 200px; border-radius: 10px;"></div></div>
+                  <div class="col-md-3"><div class="skeleton" style="height: 200px; border-radius: 10px;"></div></div>
+                  <div class="col-md-3"><div class="skeleton" style="height: 200px; border-radius: 10px;"></div></div>
+                  <div class="col-md-3"><div class="skeleton" style="height: 200px; border-radius: 10px;"></div></div>
+                </div>
+              </div>
+             
+              <!-- Products Container -->
+              <div id="products-container" aria-live="polite" aria-atomic="true"></div>
+             
+              <!-- Pagination -->
+              <nav aria-label="Navigation des produits">
+                <div class="pagination-custom" id="pagination"></div>
+              </nav>
+            </div>
+          </section>
+         
+          <!-- Orders Tab -->
+          <section class="tab-pane fade" id="tab-commandes" role="tabpanel" aria-labelledby="tab-commandes-btn">
+            <div class="section-card p-4 rounded-3">
+              <!-- Header -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 fw-bold mb-0">Commandes Récentes</h2>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm" onclick="loadCommandesAdmin()" aria-label="Actualiser les commandes">
+                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Actualiser
+                  </button>
+                  <button class="btn btn-gradient btn-sm" onclick="showOrderModal()" aria-label="Créer une nouvelle commande">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Nouvelle Commande
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Orders List -->
+              <div id="commandes-container" aria-live="polite" aria-atomic="true"></div>
+              
+              <!-- Benefits Grid -->
+              <div class="mt-4">
+                <h3 class="h5 fw-bold mb-3">Bénéfices par Commande</h3>
+                <div id="benefices-grid" class="row g-3" aria-live="polite"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Clients Tab -->
+          <section class="tab-pane fade" id="tab-clients" role="tabpanel" aria-labelledby="tab-clients-btn">
+            <div class="section-card p-4 rounded-3">
+              <!-- Header -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 fw-bold mb-0">Gestion des Clients</h2>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm" onclick="exportData('excel')" aria-label="Exporter en Excel">
+                    <i class="bi bi-file-excel" aria-hidden="true"></i> Excel
+                  </button>
+                  <button class="btn btn-outline-danger btn-sm" onclick="exportData('pdf')" aria-label="Exporter en PDF">
+                    <i class="bi bi-file-pdf" aria-hidden="true"></i> PDF
+                  </button>
+                  <button class="btn btn-outline-primary btn-sm" onclick="loadClients()" aria-label="Actualiser la liste des clients">
+                    <i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Actualiser
+                  </button>
+                  <button class="btn btn-gradient btn-sm" onclick="showClientModal()" aria-label="Ajouter un nouveau client">
+                    <i class="bi bi-plus-lg" aria-hidden="true"></i> Nouveau Client
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Filters -->
+              <form class="row g-3 mb-4" onsubmit="event.preventDefault();" aria-label="Filtres des clients">
+                <div class="col-md-6">
+                  <label for="search-clients" class="visually-hidden">Rechercher un client</label>
+                  <input type="search" class="form-control" placeholder="🔍 Rechercher un client (nom, email, téléphone)..." id="search-clients" onkeyup="filterClients()" aria-label="Rechercher un client">
+                </div>
+                <div class="col-md-3">
+                  <label for="filter-client-status" class="visually-hidden">Filtrer par statut</label>
+                  <select class="form-select" id="filter-client-status" onchange="filterClients()" aria-label="Filtrer par statut client">
+                    <option value="">Tous les statuts</option>
+                    <option value="actif">Actifs</option>
+                    <option value="inactif">Inactifs</option>
+                  </select>
+                </div>
+                <div class="col-md-3 text-end">
+                  <div class="btn-group" role="group" aria-label="Mode d'affichage">
+                    <button type="button" class="btn btn-outline-secondary btn-sm active" onclick="setClientView('grid')" aria-label="Affichage en grille" aria-pressed="true">
+                      <i class="bi bi-grid" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="setClientView('list')" aria-label="Affichage en liste" aria-pressed="false">
+                      <i class="bi bi-list-ul" aria-hidden="true"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+              
+              <!-- Clients List -->
+              <div id="clients-container" aria-live="polite" aria-atomic="true">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th><input type="checkbox" onclick="toggleAllClients()" aria-label="Sélectionner tous les clients"></th>
+                        <th>Client</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Commandes</th>
+                        <th>Total dépensé</th>
+                        <th>Dernière commande</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="clients-table-body">
+                      <tr>
+                        <td colspan="8" class="text-center py-5">
+                          <div class="spinner-border text-pink mb-3" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                          </div>
+                          <p class="text-muted">Chargement des clients...</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <!-- Pagination Clients -->
+              <nav aria-label="Navigation des clients">
+                <div class="pagination-custom" id="pagination-clients"></div>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Inventaire Tab -->
+          <section class="tab-pane fade" id="tab-inventory" role="tabpanel" aria-labelledby="tab-inventory-btn">
+            <div class="section-card p-4 rounded-3">
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="h5 fw-bold mb-0">Inventaire & Plans d'achat</h2>
+                <button class="btn btn-gradient btn-sm" onclick="showInventoryModal()">
+                  <i class="bi bi-plus-lg" aria-hidden="true"></i> Nouveau plan
+                </button>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead>
+                    <tr>
+                      <th>Produit</th>
+                      <th>Stock actuel</th>
+                      <th>Quantité prévue</th>
+                      <th>Quantité réelle</th>
+                      <th>Date prévue</th>
+                      <th>Notes</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="inventory-table-body">
+                    <tr>
+                      <td colspan="7" class="text-center py-4 text-muted">
+                        Chargement de l'inventaire...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- Analytics Tab AMÉLIORÉ -->
+          <section class="tab-pane fade" id="tab-analytics" role="tabpanel" aria-labelledby="tab-analytics-btn">
+            <!-- Filtres période -->
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h2 class="h5 fw-bold mb-0">📊 Analytics Avancées</h2>
+                  <div class="btn-group" role="group">
+                    <input type="radio" class="btn-check" name="analytics-period" id="period-7days" value="7days" checked>
+                    <label class="btn btn-outline-primary" for="period-7days">7 jours</label>
+                    
+                    <input type="radio" class="btn-check" name="analytics-period" id="period-30days" value="30days">
+                    <label class="btn btn-outline-primary" for="period-30days">30 jours</label>
+                    
+                    <input type="radio" class="btn-check" name="analytics-period" id="period-90days" value="90days">
+                    <label class="btn btn-outline-primary" for="period-90days">90 jours</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row g-4">
+              <!-- KPIs principaux -->
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body text-center">
+                    <div class="mb-2">
+                      <i class="bi bi-graph-up text-success" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="h4 mb-1" id="kpi-revenue">0 FCFA</h3>
+                    <p class="text-muted small mb-0">Revenu Total</p>
+                    <small class="text-success" id="kpi-revenue-trend">↑ +0%</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body text-center">
+                    <div class="mb-2">
+                      <i class="bi bi-basket text-primary" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="h4 mb-1" id="kpi-orders">0</h3>
+                    <p class="text-muted small mb-0">Commandes</p>
+                    <small class="text-success" id="kpi-orders-trend">↑ +0%</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body text-center">
+                    <div class="mb-2">
+                      <i class="bi bi-cart text-warning" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="h4 mb-1" id="kpi-avg-basket">0 FCFA</h3>
+                    <p class="text-muted small mb-0">Panier Moyen</p>
+                    <small class="text-success" id="kpi-basket-trend">↑ +0%</small>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="card border-0 shadow-sm h-100">
+                  <div class="card-body text-center">
+                    <div class="mb-2">
+                      <i class="bi bi-percent text-info" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3 class="h4 mb-1" id="kpi-conversion">0%</h3>
+                    <p class="text-muted small mb-0">Taux de Conversion</p>
+                    <small class="text-muted" id="kpi-conversion-trend">—</small>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Graphique des ventes -->
+              <div class="col-md-8">
+                <article class="chart-container">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="h6 fw-bold mb-0">📈 Évolution des ventes</h3>
+                    <button class="btn btn-sm btn-outline-primary" onclick="exportChart('salesChart')">
+                      <i class="bi bi-download"></i> Exporter
+                    </button>
+                  </div>
+                  <canvas id="salesChart" height="80"></canvas>
+                </article>
+              </div>
+              
+              <!-- Graphique catégories -->
+              <div class="col-md-4">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">🎯 Distribution par Type</h3>
+                  <canvas id="categoriesChart"></canvas>
+                  <div class="mt-3" id="category-legend"></div>
+                </article>
+              </div>
+
+              <!-- Produits les plus vendus -->
+              <div class="col-md-6">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">🏆 Top 10 Produits</h3>
+                  <div id="top-products-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Chargement dynamique -->
+                  </div>
+                </article>
+              </div>
+
+              <!-- Analyse clients -->
+              <div class="col-md-6">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">👥 Activité Clients</h3>
+                  <canvas id="clientActivityChart"></canvas>
+                </article>
+              </div>
+
+              <!-- Revenus par type de produit -->
+              <div class="col-md-12">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">💰 Revenus par Type de Produit</h3>
+                  <canvas id="revenueByTypeChart" height="60"></canvas>
+                </article>
+              </div>
+
+              <!-- Meilleurs clients -->
+              <div class="col-md-12">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">⭐ Top 10 Clients</h3>
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>Rang</th>
+                          <th>Client</th>
+                          <th>Commandes</th>
+                          <th>Total dépensé</th>
+                          <th>Panier moyen</th>
+                        </tr>
+                      </thead>
+                      <tbody id="best-customers-table">
+                        <!-- Chargement dynamique -->
+                      </tbody>
+                    </table>
+                  </div>
+                </article>
+              </div>
+
+              <!-- Prévisions -->
+              <div class="col-md-12">
+                <article class="chart-container">
+                  <h3 class="h6 fw-bold mb-3">🔮 Prévisions de Ventes (7 prochains jours)</h3>
+                  <canvas id="forecastChart" height="60"></canvas>
+                </article>
+              </div>
+            </div>
+          </section>
+         
+          <!-- Settings Tab -->
+          <section class="tab-pane fade" id="tab-settings" role="tabpanel" aria-labelledby="tab-settings-btn">
+            <div class="section-card p-4 rounded-3">
+              <h2 class="h5 fw-bold mb-4">Paramètres</h2>
+              
+              <form>
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="autoRefresh" role="switch">
+                  <label class="form-check-label" for="autoRefresh">
+                    Actualisation automatique (toutes les 30s)
+                  </label>
+                </div>
+                
+                <div class="form-check form-switch mb-3">
+                  <input class="form-check-input" type="checkbox" id="notifications" role="switch">
+                  <label class="form-check-label" for="notifications">
+                    Notifications push
+                  </label>
+                </div>
+              </form>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <!-- Floating Actions -->
+    <button class="theme-toggle" onclick="toggleTheme()" title="Changer de thème" aria-label="Changer de thème">
+      <i class="bi bi-moon-stars fs-4" id="theme-icon" aria-hidden="true"></i>
+    </button>
+
+    <div class="quick-actions">
+      <button class="btn btn-gradient quick-action-btn" onclick="showProductModal()" aria-label="Ajouter un produit rapidement" title="Nouveau produit">
+        <i class="bi bi-plus fs-4" aria-hidden="true"></i>
+      </button>
+      <button class="btn btn-primary quick-action-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Retour en haut" title="Retour en haut">
+        <i class="bi bi-arrow-up fs-4" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Bulk Actions Bar -->
+    <aside class="bulk-actions" id="bulk-actions" role="complementary" aria-label="Actions groupées">
+      <span><strong id="selected-count">0</strong> sélectionné(s)</span>
+      <button class="btn btn-sm btn-danger" onclick="bulkDelete()" aria-label="Supprimer les éléments sélectionnés">
+        <i class="bi bi-trash" aria-hidden="true"></i> Supprimer
+      </button>
+      <button class="btn btn-sm btn-secondary" onclick="clearSelection()" aria-label="Annuler la sélection">
+        Annuler
+      </button>
+    </aside>
+  </div>
+
+  <!-- Product Modal -->
+  <div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="productModalLabel">Nouveau Produit</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        
+        <form id="product-form">
+          <div class="modal-body">
+            <!-- Image Upload -->
+            <div class="mb-4">
+              <label for="product-image" class="form-label fw-bold">Image du produit</label>
+              <div class="upload-zone" id="upload-zone" role="button" tabindex="0">
+                <i class="bi bi-cloud-upload display-4 text-muted" aria-hidden="true"></i>
+                <p class="mb-0">Glissez une image ou cliquez pour parcourir</p>
+                <small class="text-muted">PNG, JPG jusqu'à 5MB</small>
+                <input type="file" id="product-image" accept="image/*" style="display:none" aria-label="Sélectionner une image">
+              </div>
+              <img id="image-preview" class="image-preview mt-3" style="display:none" alt="Aperçu de l'image du produit">
+            </div>
+         
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="product-nom" class="form-label fw-bold">Nom *</label>
+                <input type="text" class="form-control" id="product-nom" required aria-required="true">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="product-prix-achat" class="form-label fw-bold">Prix d'achat (FCFA) *</label>
+                <input type="number" class="form-control" id="product-prix-achat" required step="0.01" min="0" aria-required="true">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="product-prix" class="form-label fw-bold">Prix de vente (FCFA) *</label>
+                <input type="number" class="form-control" id="product-prix" required step="0.01" min="0" aria-required="true">
+              </div>
+              
+              <div class="col-md-4">
+                <label for="product-age" class="form-label fw-bold">Âge</label>
+                <select class="form-select" id="product-age">
+                  <option>0-3 mois</option>
+                  <option>3-6 mois</option>
+                  <option>6-12 mois</option>
+                  <option>12-24 mois</option>
+                </select>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="product-type" class="form-label fw-bold">Type</label>
+                <select class="form-select" id="product-type">
+                  <option>Body</option>
+                  <option>Pyjama</option>
+                  <option>Accessoire</option>
+                </select>
+              </div>
+              
+              <div class="col-md-4">
+                <label for="product-stock" class="form-label fw-bold">Stock</label>
+                <input type="number" class="form-control" id="product-stock" min="0">
+              </div>
+              
+              <div class="col-12">
+                <label for="product-description" class="form-label fw-bold">Description</label>
+                <textarea class="form-control" id="product-description" rows="3"></textarea>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="product-matiere" class="form-label fw-bold">Matière</label>
+                <input type="text" class="form-control" id="product-matiere">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="product-entretien" class="form-label fw-bold">Entretien</label>
+                <input type="text" class="form-control" id="product-entretien">
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-gradient">
+              <i class="bi bi-save" aria-hidden="true"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Modal -->
+  <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="orderModalTitle">Nouvelle Commande</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        
+        <form id="order-form">
+          <div class="modal-body">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="order-client" class="form-label fw-bold">Client *</label>
+                <input type="text" class="form-control" id="order-client" required placeholder="Rechercher un client..." aria-required="true" list="clients-datalist">
+                <small class="text-muted">Commencez à taper le nom du client</small>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="order-status" class="form-label fw-bold">Status *</label>
+                <select class="form-select" id="order-status" required aria-required="true">
+                  <option value="en_attente">En attente</option>
+                  <option value="payee">Payée</option>
+                  <option value="expediee">Expédiée</option>
+                  <option value="livree">Livrée</option>
+                  <option value="annulee">Annulée</option>
+                </select>
+              </div>
+              
+              <!-- Product Filters -->
+              <div class="col-12">
+                <label class="form-label fw-bold">Sélectionner Produits</label>
+                <div class="row g-2 mb-2">
+                  <div class="col-md-4">
+                    <label for="filter-product-search" class="visually-hidden">Rechercher un produit</label>
+                    <input type="search" class="form-control" id="filter-product-search" placeholder="Rechercher produit..." aria-label="Rechercher un produit">
+                  </div>
+                  <div class="col-md-4">
+                    <label for="filter-product-type" class="visually-hidden">Filtrer par type</label>
+                    <select class="form-select" id="filter-product-type" aria-label="Filtrer par type de produit">
+                      <option value="">Tous types</option>
+                      <option value="Body">Body</option>
+                      <option value="Pyjama">Pyjama</option>
+                      <option value="Accessoire">Accessoire</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="filter-product-age" class="visually-hidden">Filtrer par âge</label>
+                    <select class="form-select" id="filter-product-age" aria-label="Filtrer par tranche d'âge">
+                      <option value="">Tous âges</option>
+                      <option value="0-3 mois">0-3 mois</option>
+                      <option value="3-6 mois">3-6 mois</option>
+                      <option value="6-12 mois">6-12 mois</option>
+                      <option value="12-24 mois">12-24 mois</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Products Selection List -->
+              <div class="col-12">
+                <fieldset>
+                  <legend class="visually-hidden">Liste des produits disponibles</legend>
+                  <div id="products-select-list" class="border p-3" style="max-height: 200px; overflow-y: auto;" role="group" aria-label="Sélection des produits">
+                    <!-- Products loaded dynamically -->
+                  </div>
+                </fieldset>
+              </div>
+              
+              <div class="col-md-6">
+                <label for="order-total-brut" class="form-label fw-bold">Total Brut (FCFA)</label>
+                <input type="number" class="form-control" id="order-total-brut" readonly aria-readonly="true" step="0.01">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="order-remise" class="form-label fw-bold">Remise (% ou FCFA)</label>
+                <input type="text" class="form-control" id="order-remise" placeholder="Ex: 10% ou 500" oninput="calculateTotal()">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="order-total" class="form-label fw-bold">Total Net (FCFA) *</label>
+                <input type="number" class="form-control" id="order-total" required readonly aria-readonly="true" aria-required="true" step="0.01">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="order-adresse" class="form-label fw-bold">Adresse Livraison</label>
+                <textarea class="form-control" id="order-adresse" rows="2" placeholder="Optionnel"></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-gradient">
+              <i class="bi bi-save" aria-hidden="true"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client Modal -->
+  <div class="modal fade" id="clientModal" tabindex="-1" aria-labelledby="clientModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5" id="clientModalTitle">Nouveau Client</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        
+        <form id="client-form">
+          <div class="modal-body">
+            <!-- Indicateur Client Boutique -->
+            <div class="alert alert-info mb-3">
+              <i class="bi bi-info-circle"></i> 
+              <strong>Client boutique :</strong> Laissez l'email vide pour un client qui vient en boutique physique. Un email sera généré automatiquement.
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="client-prenom" class="form-label fw-bold">Prénom</label>
+                <input type="text" class="form-control" id="client-prenom">
+              </div>
+              
+              <div class="col-md-6">
+                <label for="client-nom" class="form-label fw-bold">Nom *</label>
+                <input type="text" class="form-control" id="client-nom" required aria-required="true">
+              </div>
+              
+              <div class="col-12">
+                <label for="client-email" class="form-label fw-bold">Email</label>
+                <input type="email" class="form-control" id="client-email" placeholder="Optionnel pour client boutique">
+                <small class="text-muted">Laissez vide pour un client boutique (sans compte en ligne)</small>
+              </div>
+              
+              <div class="col-12">
+                <label for="client-telephone" class="form-label fw-bold">Téléphone *</label>
+                <input type="tel" class="form-control" id="client-telephone" placeholder="+237 6XX XX XX XX" required>
+                <small class="text-muted">Requis pour identifier le client</small>
+              </div>
+              
+              <div class="col-12">
+                <label for="client-adresse" class="form-label fw-bold">Adresse</label>
+                <textarea class="form-control" id="client-adresse" rows="3" placeholder="Quartier, Rue, Ville..."></textarea>
+              </div>
+              
+              <div class="col-12">
+                <label for="client-notes" class="form-label fw-bold">Notes</label>
+                <textarea class="form-control" id="client-notes" rows="2" placeholder="Informations complémentaires..."></textarea>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="submit" class="btn btn-gradient">
+              <i class="bi bi-save" aria-hidden="true"></i> Enregistrer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script type="module" src="js/admin.js"></script>
+</body>
+</html>
