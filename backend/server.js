@@ -128,7 +128,7 @@ app.get('/health', async (req, res) => {
     await connection.end();
 
     // Test CORS (simule frontend origin 8000)
-    const testOrigin = req.get('Origin') || 'http://127.0.0.1:8000';
+    const testOrigin = req.get('Origin') || 'http://127.0.0.1:8000' || 'https://loedikids-backend.onrender.com';
     res.set('Access-Control-Allow-Origin', testOrigin); // Debug header
 
     res.json({
