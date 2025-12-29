@@ -38,7 +38,9 @@ const corsOptions = {
   origin: [
     'http://127.0.0.1:8000',  // Frontend principal (Vite/Live Server)
     'http://localhost:8000',
-    'http://localhost:3000'   // Backup si port change
+    'http://localhost:3000',
+    'https://loedikids-backend.onrender.com',
+      // Backup si port change
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Incl OPTIONS
   allowedHeaders: ['Content-Type', 'Authorization'],
